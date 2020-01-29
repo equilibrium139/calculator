@@ -45,7 +45,7 @@ const display = document.querySelector("#calculatordisplay");
 const buttons = [...document.querySelectorAll("button")];
 
 buttons.forEach(button => {
-    if(+button.textContent || isOperator(button.textContent))
+    if(+button.textContent || isOperator(button.textContent) || button.textContent == "0")
     {
         button.addEventListener("click", () => {
             display.textContent += button.textContent;
@@ -65,7 +65,12 @@ buttons.forEach(button => {
     }
 });
 
-document.addEventListener("keypress", e => {
-    let buttonPressed = buttons.find(button => button.textContent.charCodeAt(0) == e.keyCode);
+document.addEventListener("keydown", e => {
+    console.log(String.fromCharCode(e.which));
+    let buttonPressed = buttons.find(button => {
+        let buttonKeyCode = button.getAttribute("data-keycode");
+        let buttonKeyCodes = buttonKeyCode.split(" ");
+        return buttonKeyCodes.map(keyCode => +keyCode).includes(e.which || e.keyCode);
+    });
     if(buttonPressed) {  buttonPressed.click();}
 });
